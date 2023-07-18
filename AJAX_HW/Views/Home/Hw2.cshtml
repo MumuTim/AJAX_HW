@@ -1,0 +1,41 @@
+﻿
+@{
+    ViewData["Title"] = "Hw2";
+}
+
+<h1>Hw2</h1>
+<div class="container">
+    <div id="#div1">
+
+    </div>
+</div>
+@section Scripts
+{
+    <script src="~/datas/travel.js"></script>
+    <script>
+        const datas = spots.CommonFormat.Section;
+        const findimg = datas.map((value,index) =>{
+
+            const { stitle, xbody } = value;
+            let imgName = value.file.img;
+            if (imgName.length > 0) {
+                imgName = imgName[0].text;
+            }
+            else {
+                imgName = imgName.text;
+            }
+        
+
+        return (`<div class="card" style="width: 18rem;">
+                <img src="${imgName}" class="card-img-top" alt="...">
+                <div class="card-body">
+                <h5 class="card-title">${stitle}</h5>
+                <p class="card-text">${xbody.substring(0, 80)}.....</p>
+                <a href="#" class="btn btn-primary">瀏覽更多</a>
+                </div>
+            </div>`)
+        });
+        
+        $("#div1").html(findimg.join(""))
+    </script>
+}

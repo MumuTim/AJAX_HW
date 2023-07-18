@@ -1,0 +1,71 @@
+﻿
+@{
+    ViewData["Title"] = "Hw6";
+}
+
+<h1>Hw6</h1>
+
+<select id="cities"></select>
+<select id="districts"></select>
+<select id="roads"></select>
+
+@section Scripts
+{
+    <script>
+        function LoadCities() {
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', '@Url.Content("~/api/Cities")');
+            xhr.send();
+
+            xhr.addEventListener('load', () => {
+                const datas = JSON.parse(xhr.responseText);
+                var cities = datas.map(city => {
+                    return (`<option value="${city}">${city}</option>`)
+                })
+                $("#cities").html(cities.join(""));
+                LoadDistricts();
+            })
+        }
+
+        function LoadDistricts() {
+            const city = $("#cities>option:selected").val();
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', `@Url.Content("~/api/Districts?city=")${city}`);
+            xhr.send();
+
+            xhr.addEventListener('load', () => {
+                const datas = JSON.parse(xhr.responseText);
+                var districts = datas.map(district => {
+                    return (`<option value="${district}">${district}</option>`)
+                })
+                $("#districts").html(districts.join(""));
+                LoadRoads();
+            })
+        }
+
+        function LoadRoads() {
+            const district = $("#districts>option:selected").val();
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', `@Url.Content("~/api/Roads?SiteId=")${district}`);
+            xhr.send();
+
+            xhr.addEventListener('load', () => {
+                const datas = JSON.parse(xhr.responseText);
+                var roads = datas.map(road => {
+                    return (`<option value="${road}">${road}</option>`)
+                })
+                $("#roads").html(roads.join(""));
+            })
+        }
+
+        LoadCities();
+
+        $("#cities").change(() => {
+            LoadDistricts();
+        });
+
+        $("#districts").change(() => {
+            LoadRoads();
+        });
+    </script>
+}
